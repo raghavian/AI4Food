@@ -6,7 +6,7 @@ There seem to be two regimes for the data. Trying to see if a linear model can b
   <img src="composite_model.png" width="800" height="" />
 </p>
 
-#### Soft-Gated Mixture Model
+## Soft-Gated Mixture Model
 
 Instead of a hard binary switch (Linear vs. Complex), we can train a model to predict the **expected error (residual)** of the physics model for any given experimental condition. We then use this predicted error as a "Confidence Score" to smoothly blend the two models.
 
@@ -28,4 +28,17 @@ $w = \exp\left(-\frac{\epsilon^2}{2\cdot (3\sigma)^2}\right)$
 
 Where, $\sigma$ is the standard deviation of the residuals for the _inliers_ identified by RANSAC.
 
+## Data Preprocessing
+
+* Convert frequency in Hz to rad/s.
+* For fitting $K_w$, we use:
+
+$x = viscosity/(sphere_mass * frequency)$
+
+Where:
+sphere mass (kg) is 0.000133 for iron, 0.000128 for copper, and 0.000035 for glass.
+viscosity (Pa.s) as it appears in the matrix
+frequency (rad/s) as it appears in the matrix.
+
+$y = \sqrt((1/\rho^2) - 1)$.
 
