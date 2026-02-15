@@ -33,7 +33,7 @@ Where, $\sigma$ is the standard deviation of the residuals for the _inliers_ ide
 * Convert frequency in Hz to rad/s.
 * For fitting $K_w$, we use:
 
-$x = viscosity/(sphere_mass * frequency)$
+$x = viscosity/(sphere-mass * frequency)$
 
 Where:
 sphere mass (kg) is 0.000133 for iron, 0.000128 for copper, and 0.000035 for glass.
