@@ -12,7 +12,7 @@ Instead of a hard binary switch (Linear vs. Complex), we can train a model to pr
 
 This approach works as follows:
 
-1. **Physics Model:** Calculate $y_{phy} = K_w \cdot x$ (using RANSAC to find $K_w$).
+1. **Physics Model:** Calculate $y_{phy} = K_w \cdot x$ (using [RANSAC](https://scikit-learn.org/stable/auto_examples/linear_model/plot_ransac.html) to find $K_w$).
 2. **Error Model:** Train a Random Forest to predict the magnitude of the residual i.e. $\epsilon = |y_{meas} - y_{phy}|$ based on Temperature, RPM, etc. This creates a map of "Where does the physics model fail?", hopefully.
 3. **Complex Model:** Train an MLP on the full dataset to capture the non-linear behavior.
 4. **Soft Blending:** The final prediction is a weighted average:
