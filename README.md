@@ -20,6 +20,6 @@ Where $w$ is high (near 1) when the predicted error is low, and  drops to 0 when
 
 **Weights of the soft-gating**: These weights are obtained using a Gaussian radial basis function, that acts as a confidence score for the linear physics model. The specific formulation is:
 
-$w = \exp\left(-\frac{\epsilon}^2{2\cdot (3\sigma)^2}\right)$
+$w = \exp\left(-\frac{\epsilon^2}{2\cdot (3\sigma)^2}\right)$
 
 Where, $\sigma$ is the standard deviation of the residuals for the _inliers_ identified by RANSAC.
