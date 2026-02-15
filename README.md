@@ -40,5 +40,5 @@ sphere mass (kg) is 0.000133 for iron, 0.000128 for copper, and 0.000035 for gla
 viscosity (Pa.s) as it appears in the matrix
 frequency (rad/s) as it appears in the matrix.
 
-$y = \sqrt((1/\rho^2) - 1)$.
+$y = \sqrt{((1/\rho^2) - 1)}$.
 
