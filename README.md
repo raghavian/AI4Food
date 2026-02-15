@@ -2,6 +2,10 @@
 
 There seem to be two regimes for the data. Trying to see if a linear model can be used in the physics dominated domain, and then use a neural network (MLP) for the non-linear/complex regime. Several iterations have led to a soft-gating mechanism described next.
 
+<p float="left">
+  <img src="composite_model.png" width="800" height="" />
+</p>
+
 #### Soft-Gated Mixture Model
 
 Instead of a hard binary switch (Linear vs. Complex), we can train a model to predict the **expected error (residual)** of the physics model for any given experimental condition. We then use this predicted error as a "Confidence Score" to smoothly blend the two models.
@@ -23,3 +27,5 @@ Where $w$ is high (near 1) when the predicted error is low, and  drops to 0 when
 $w = \exp\left(-\frac{\epsilon^2}{2\cdot (3\sigma)^2}\right)$
 
 Where, $\sigma$ is the standard deviation of the residuals for the _inliers_ identified by RANSAC.
+
+

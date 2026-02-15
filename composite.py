@@ -176,7 +176,7 @@ def plot_soft_gated_results(df, model_dict):
     plt.scatter(df[top2_names[0]], df[top2_names[1]], c=weights, cmap='RdYlBu', edgecolors='k', s=40)
     plt.xlabel(top2_names[0])
     plt.ylabel(top2_names[1])
-    plt.title(f'Physics Validity Map\n(Blue = Trust Physics, Red = Trust ML)')
+    plt.title(f'Physics Validity Map\n(Blue = Trust Physics, Red = Trust ML). Kw= {model_dict['Kw']:.5f}')
 
     # --- Subplot 2: Prediction ---
     plt.subplot(1, 2, 2)
@@ -195,7 +195,7 @@ def plot_soft_gated_results(df, model_dict):
     plt.grid(True, alpha=0.3)
     
     plt.tight_layout()
-    plt.savefig('composite_model.pdf')
+    plt.savefig('composite_model.png')
 
 if __name__ == "__main__":
     file_path = 'master_per_well_lockin_matrix.csv'
