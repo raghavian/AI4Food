@@ -26,7 +26,7 @@ Where $w$ is high (near 1) when the predicted error is low, and  drops to 0 when
 
 $w = \exp\left(-\frac{\epsilon^2}{2\cdot (3\sigma)^2}\right)$
 
-Where, $\sigma$ is the standard deviation of the residuals for the _inliers_ identified by RANSAC.
+Where, $\sigma$ is the standard deviation of the residuals for the _inliers_ identified by RANSAC. The scaling of $\sigma$ (say by 3) is a tolerance on the deviation we can live with using the physics model. 
 
 ## Data Preprocessing
 
