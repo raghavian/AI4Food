@@ -41,7 +41,7 @@ def load_and_process_data(file_path):
 
     return df_med
 
-def train_soft_gated_model(df, valid_conc_range=None):
+def train_soft_gated_model(df, valid_param_range=None):
     """
     Trains a Soft-Gated Mixture Model:
     1. Physics Model: Estimates Kw using ONLY data within valid_conc_range.
@@ -66,21 +66,21 @@ def train_soft_gated_model(df, valid_conc_range=None):
 
     # --- Step 1: Physics Model (RANSAC) on RESTRICTED Range ---
     # We must explicitly separate the calibration data to ensure mask alignment
-    if valid_conc_range:
-        min_c, max_c = valid_conc_range
-        print(f"Restricting Physics (Kw) estimation to Concentration: {min_c}% - {max_c}%")
-        physics_mask = (df['concentration'] >= min_c) & (df['concentration'] <= max_c)
+    if valid_param_range:
+        min_c, max_c = valid_param_range
+        print(f"Restricting Physics (Kw) estimation to rho: {min_c} - {max_c}")
+        physics_mask = (df['rho'] >= min_c) & (df['rho'] <= max_c)
         
         if physics_mask.sum() < 5:
-            print("Warning: Too few points in concentration range. Using full dataset.")
+            print("Warning: Too few points in rho range. Using full dataset.")
             x_calib = x_physics
             y_calib = y_target
         else:
             x_calib = x_physics[physics_mask]
             y_calib = y_target[physics_mask]
-            print(f"Physics calibrated on {physics_mask.sum()} points.")
+            print(f"Physics model calibrated on {physics_mask.sum()} points.")
     else:
-        print("Using full concentration range for Physics estimation.")
+        print("Using full rho range for Physics model estimation.")
         x_calib = x_physics
         y_calib = y_target
 
@@ -95,7 +95,7 @@ def train_soft_gated_model(df, valid_conc_range=None):
     inlier_residuals = y_calib[ransac.inlier_mask_].ravel() - Kw * x_calib[ransac.inlier_mask_].ravel()
     inlier_std = np.std(inlier_residuals)
     
-    print(f"Physics Slope (Kw): {Kw:.4f}")
+    print(f"Physics Model Slope (Kw): {Kw:.4f}")
     print(f"Inlier Noise Std (Sigma): {inlier_std:.4f}")
 
     # --- Step 2: Complex Model (Full MLP) on FULL Dataset ---
@@ -120,7 +120,7 @@ def train_soft_gated_model(df, valid_conc_range=None):
         'preprocessor': preprocessor,
         'sigma': inlier_std,
         'feature_cols': feature_cols,
-        'valid_conc_range': valid_conc_range
+        'valid_param_range': valid_param_range
     }
 
 def predict_soft_gated(model_dict, df):
@@ -192,7 +192,7 @@ def plot_soft_gated_results(df, model_dict):
     plt.scatter(df[top2_names[0]], df[top2_names[1]], c=weights, cmap='RdYlBu', edgecolors='k', s=40)
     plt.xlabel(top2_names[0])
     plt.ylabel(top2_names[1])
-    range_text = f" (Kw fit on {model_dict['valid_conc_range']})" if model_dict['valid_conc_range'] else ""
+    range_text = f" (Kw fit on rho {model_dict['valid_param_range']})" if model_dict['valid_param_range'] else ""
     plt.title(f'Physics Validity Map{range_text}\n(Blue = Trust Physics, Red = Trust ML); Kw={model_dict['Kw']:.4f}')
 
     # --- Subplot 2: Prediction ---
@@ -219,10 +219,10 @@ if __name__ == "__main__":
     print("Loading Data...")
     df = load_and_process_data(file_path)
     if df is not None:
-        # Define the valid concentration range for physics (e.g., 0 to 60%)
-        # Adjust this tuple as needed: (min_conc, max_conc)
-        physics_concentration_range = (20, 70) 
+        # Define the valid range of parameters (e.g., 0.1 to 0.5 for rho)
+        # Adjust this tuple as needed: (min_value, max_value)
+        param_range = (0.1, 0.5) 
         
-        print(f"Training Soft-Gated Model with restricted physics range: {physics_concentration_range}...")
-        model_dict = train_soft_gated_model(df, valid_conc_range=physics_concentration_range)
+        print(f"Training Soft-Gated Model with restricted physics range (rho): {param_range}...")
+        model_dict = train_soft_gated_model(df, valid_param_range=param_range)
         plot_soft_gated_results(df, model_dict)
